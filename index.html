@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://via.placeholder.com/1920x1080'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .quiz-header {
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .quiz-question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .quiz-options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .quiz-options li {
+            margin-bottom: 15px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .quiz-options li:hover {
+            background-color: #e9e9e9;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-submit {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .quiz-submit:hover {
+            background-color: #0056b3;
+        }
+
+        .quiz-result {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .quiz-options input[type="radio"]:checked + label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h2>Simple Quiz</h2>
+        </div>
+        <div class="quiz-question" id="quiz-question">Question text</div>
+        <ul class="quiz-options">
+            <li>
+                <input type="radio" name="option" value="0" id="option0">
+                <label for="option0" id="label0">Option 1</label>
+            </li>
+            <li>
+                <input type="radio" name="option" value="1" id="option1">
+                <label for="option1" id="label1">Option 2</label>
+            </li>
+            <li>
+                <input type="radio" name="option" value="2" id="option2">
+                <label for="option2" id="label2">Option 3</label>
+            </li>
+            <li>
+                <input type="radio" name="option" value="3" id="option3">
+                <label for="option3" id="label3">Option 4</label>
+            </li>
+        </ul>
+        <button class="quiz-submit" onclick="submitAnswer()">Submit</button>
+        <div class="quiz-result" id="quiz-result"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                answer: 2
+            },
+            {
+                question: "Which language runs in a web browser?",
+                options: ["Java", "C", "Python", "JavaScript"],
+                answer: 3
+            },
+            {
+                question: "What does CSS stand for?",
+                options: ["Central Style Sheets", "Cascading Style Sheets", "Cascading Simple Sheets", "Cars SUVs Sailboats"],
+                answer: 1
+            },
+            {
+                question: "What year was JavaScript launched?",
+                options: ["1996", "1995", "1994", "None of the above"],
+                answer: 1
+            }
+        ];
+
+        let currentQuiz = 0;
+        let score = 0;
+
+        loadQuiz();
+
+        function loadQuiz() {
+            deselectOptions();
+            const currentQuizData = quizData[currentQuiz];
+            document.getElementById("quiz-question").innerText = currentQuizData.question;
+            document.getElementById("label0").innerText = currentQuizData.options[0];
+            document.getElementById("label1").innerText = currentQuizData.options[1];
+            document.getElementById("label2").innerText = currentQuizData.options[2];
+            document.getElementById("label3").innerText = currentQuizData.options[3];
+        }
+
+        function getSelected() {
+            const options = document.getElementsByName("option");
+            let selectedOption = undefined;
+
+            options.forEach(option => {
+                if (option.checked) {
+                    selectedOption = option.value;
+                }
+            });
+
+            return selectedOption;
+        }
+
+        function deselectOptions() {
+            const options = document.getElementsByName("option");
+            options.forEach(option => option.checked = false);
+        }
+
+        function submitAnswer() {
+            const selectedAnswer = getSelected();
+
+            if (selectedAnswer !== undefined) {
+                if (selectedAnswer == quizData[currentQuiz].answer) {
+                    score++;
+                }
+
+                currentQuiz++;
+
+                if (currentQuiz < quizData.length) {
+                    loadQuiz();
+                } else {
+                    document.getElementById("quiz-result").innerHTML = `
+                        You answered ${score}/${quizData.length} questions correctly.
+                    `;
+                    document.querySelector(".quiz-submit").disabled = true;
+                }
+            } else {
+                alert("Please select an option before submitting!");
+            }
+        }
+    </script>
+
+</body>
+</html>
